@@ -12,6 +12,9 @@ public enum Granularity: Hashable {
         [date, symbol, file, line, column, function]
     }
 
+    /// Gets substracted set from all granularities with provided granularities
+    /// - Parameter granularities: Set of granularities
+    /// - Returns: Substracted granularities
     public static func without(
         _ granularities: Set<Granularity>
     ) -> Set<Granularity> {

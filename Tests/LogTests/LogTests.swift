@@ -2,74 +2,88 @@ import XCTest
 @testable import Log
 
 final class LogTests: XCTestCase {
+    func testLogDisabled() throws {
+        Log.setIsEnabled(false)
+        let message = Log.debug("debug")
+        XCTAssertNil(message)
+        XCTAssertTrue(Log.messages.isEmpty)
+        Log.setIsEnabled(true)
+    }
+
+    func testSetDateFormatter() throws {
+        let dateFormatter = DateFormatter()
+        Log.setDateFormatter(dateFormatter)
+        XCTAssertTrue(Log.shared.dateFormatter === dateFormatter)
+    }
+
     func testLogEnabledForDebug() throws {
-        Log.shared.level = .debug
+        Log.setLevel(.debug)
         let message = Log.debug("debug")
         XCTAssertNotNil(message)
     }
 
     func testLogDisabledForDebug() throws {
-        Log.shared.level = .info
+        Log.setLevel(.info)
         let message = Log.debug("debug")
         XCTAssertNil(message)
     }
 
     func testLogEnabledForInfo() throws {
-        Log.shared.level = .info
+        Log.setLevel(.info)
         let message = Log.info("info")
         XCTAssertNotNil(message)
     }
 
     func testLogDisabledForInfo() throws {
-        Log.shared.level = .verbose
+        Log.setLevel(.verbose)
         let message = Log.info("info")
         XCTAssertNil(message)
     }
 
     func testLogEnabledForVerbose() throws {
-        Log.shared.level = .verbose
+        Log.setLevel(.verbose)
         let message = Log.verbose("verbose")
         XCTAssertNotNil(message)
     }
 
     func testLogDisabledForVerbose() throws {
-        Log.shared.level = .warning
+        Log.setLevel(.warning)
         let message = Log.verbose("verbose")
         XCTAssertNil(message)
     }
 
     func testLogEnabledForWarning() throws {
-        Log.shared.level = .warning
+        Log.setLevel(.warning)
         let message = Log.warning("warning")
         XCTAssertNotNil(message)
     }
 
     func testLogDisabledForWarning() throws {
-        Log.shared.level = .severe
+        Log.setLevel(.severe)
         let message = Log.warning("warning")
         XCTAssertNil(message)
     }
 
     func testLogEnabledForSevere() throws {
-        Log.shared.level = .severe
+        Log.setLevel(.severe)
         let message = Log.severe("severe")
         XCTAssertNotNil(message)
     }
 
     func testLogDisabledForSevere() throws {
-        Log.shared.level = .error
+        Log.setLevel(.error)
         let message = Log.severe("severe")
         XCTAssertNil(message)
     }
 
     func testLogEnabledForError() throws {
-        Log.shared.level = .error
+        Log.setLevel(.error)
         let message = Log.error("error")
         XCTAssertNotNil(message)
     }
 
     func testLogDisabledForError() throws {
-        Log.shared.level = .none
+        Log.setLevel(.none)
         let message = Log.error("error")
         XCTAssertNil(message)
     }
@@ -78,23 +92,24 @@ final class LogTests: XCTestCase {
     func testMemoryWarning() throws {
         Log.shared.level = .debug
         Log.debug("Memory warning")
-        XCTAssertFalse(Log.shared.messages.isEmpty)
+        XCTAssertFalse(Log.messages.isEmpty)
         NotificationCenter
             .default
             .post(
                 name: UIApplication.didReceiveMemoryWarningNotification,
                 object: nil
             )
-        XCTAssertTrue(Log.shared.messages.isEmpty)
+        XCTAssertTrue(Log.messages.isEmpty)
     }
 #endif
 
     func testMessagesBuffer() throws {
         Log.shared.level = .debug
+        Log.clearMessages()
         Log.debug("First message")
         Log.debug("Second message")
         Log.debug("Third message")
-        XCTAssertEqual(Log.shared.messages.count, 3)
+        XCTAssertEqual(Log.messages.count, 3)
     }
 
     func testNoneGranularity() throws {
