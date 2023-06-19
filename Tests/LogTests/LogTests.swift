@@ -74,6 +74,7 @@ final class LogTests: XCTestCase {
         XCTAssertNil(message)
     }
 
+#if os(iOS)
     func testMemoryWarning() throws {
         Log.shared.level = .debug
         Log.debug("Memory warning")
@@ -86,6 +87,7 @@ final class LogTests: XCTestCase {
             )
         XCTAssertTrue(Log.shared.messages.isEmpty)
     }
+#endif
 
     func testMessagesBuffer() throws {
         Log.shared.level = .debug
