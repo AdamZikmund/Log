@@ -7,8 +7,13 @@ import UIKit
 final public class Log {
     // MARK: - Properties
     public static let shared = Log()
-    public private(set) var messages = [String]()
+    private var _messages = [String]()
     public var level = Level.debug
+    public var isEnabled = true
+
+    public static var messages: [String] {
+        shared._messages
+    }
 
     public var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -50,17 +55,15 @@ final public class Log {
     /// - Parameter level: Logging level
     /// - Returns: True if is enabled and false if is not enabled
     private static func isLoggingEnabled(for level: Level) -> Bool {
-#if DEBUG
-        return level.rawValue >= shared.level.rawValue
-#else
-        return false
-#endif
+        return shared.isEnabled && level.rawValue >= shared.level.rawValue
     }
 
+#if os(iOS)
     /// Handles memory warning by removing messages buffer
     @objc private func didReceiveMemoryWarningNotificationHandler() {
-        messages = []
+        _messages = []
     }
+#endif
 
     /// Logs debug message
     /// - Parameters:
@@ -81,7 +84,7 @@ final public class Log {
             description: description,
             granularity: granularity
         )
-        shared.messages.append(message)
+        shared._messages.append(message)
         print(message)
         return message
     }
@@ -127,6 +130,29 @@ final public class Log {
     }
 
     // MARK: - Public
+    /// Sets logging level
+    /// - Parameter level: Logging level
+    public static func setLevel(_ level: Level) {
+        shared.level = level
+    }
+
+    /// Enables or disables logging
+    /// - Parameter isLoggingEnabled: Bool flag
+    public static func setIsEnabled(_ isEnabled: Bool) {
+        shared.isEnabled = isEnabled
+    }
+
+    /// Sets logger date formatter
+    /// - Parameter dateFormatter: Custom date formatter
+    public static func setDateFormatter(_ dateFormatter: DateFormatter) {
+        shared.dateFormatter = dateFormatter
+    }
+
+    /// Clears messages buffer
+    public static func clearMessages() {
+        shared._messages = []
+    }
+
     /// Logs debug message
     /// - Parameters:
     ///   - object: Logged object

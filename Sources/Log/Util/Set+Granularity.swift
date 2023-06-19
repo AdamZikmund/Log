@@ -9,7 +9,12 @@ extension Set where Element == Granularity {
         Element.all
     }
 
-    public static func without(_ granularities: Set<Granularity>) -> Self {
+    /// Gets substracted set from all granularities with provided granularities
+    /// - Parameter granularities: Set of granularities
+    /// - Returns: Substracted granularities
+    public static func without(
+        _ granularities: Set<Granularity>
+    ) -> Self {
         Element.without(granularities)
     }
 }
