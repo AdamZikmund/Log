@@ -15,9 +15,9 @@ analyzer_rules: # Rules run by `swiftlint analyze`
   - explicit_self
 
 included: # paths to include during linting. `--path` is ignored if present.
-  - Sources
-  - Examples
-  - Tests
+  - Example
+  - ../Sources
+  - ../Tests
 excluded: # paths to ignore during linting. Takes precedence over `included`.
   - Carthage
   - Pods
